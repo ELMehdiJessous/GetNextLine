@@ -5,14 +5,12 @@ int main()
     char *line;
     int fd = open("file.txt", O_RDWR);
 
-    printf("%s", get_next_line(fd));
-    // printf("%s", get_next_line(fd));
-    // printf("%s", get_next_line(fd));
+    line = get_next_line(fd);
 
-    // while ((line = get_next_line(fd)))
-    // {
-    //     printf("%s", line);
-    //     free(line);
-    // }
-
+    while (line)
+    {
+        printf("%s",line);
+        free(line);
+        line = get_next_line(fd);
+    }
 }

@@ -6,9 +6,10 @@
 /*   By: eljessou <eljessou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/11/05 17:29:09 by eljessou          #+#    #+#             */
-/*   Updated: 2026/11/06 19:12:28 by eljessou         ###   ########.fr       */
+/*   Updated: 2026/11/07 19:21:55 by eljessou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 #include "get_next_line.h"
 
 int lst_size(t_list *head)

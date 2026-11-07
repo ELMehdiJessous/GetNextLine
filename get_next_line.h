@@ -7,7 +7,7 @@
 #include <stdlib.h>
 
 # ifndef BUFFER_SIZE
-# define BUFFER_SIZE 8
+# define BUFFER_SIZE 10000000
 # endif
 
 typedef struct s_list
@@ -23,7 +23,8 @@ t_list  *stash(t_list *head);
 char    *copy_till(t_list *head);
 int     lst_size(t_list *head);
 void    create_nods(int fd, t_list **lst);
-int     cought_sep(t_list **head);
-void	ft_lstadd_back(t_list **lst, char *content);
+int     cought_sep(char *r);
+int     ft_lstadd_back(t_list **lst, char *content);
+void    free_all(t_list **head);
 
 #endif
