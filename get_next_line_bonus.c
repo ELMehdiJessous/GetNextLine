@@ -6,7 +6,7 @@
 /*   By: eljessou <eljessou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/11/07 21:50:55 by eljessou          #+#    #+#             */
-/*   Updated: 2026/11/07 23:06:15 by eljessou         ###   ########.fr       */
+/*   Updated: 2026/11/07 23:15:54 by eljessou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -122,19 +122,18 @@ char *get_next_line_bonus(int fd)
 {
     static  t_list  *head[MAX_FD];
     char            *line;
-    t_list          *tmp;
 
     if (fd < 0 || BUFFER_SIZE == 0 || (0 > read(fd,0,0)))
         return (NULL);
-    create_nods(fd, &head);
-    if (!head)
+    create_nods(fd, &head[fd]);
+    if (!head[fd])
         return (NULL);
-    line = copy_till(head);
+    line = copy_till(head[fd]);
     if (!line)
     {
-        free_all(&head);
+        free_all(&head[fd]);
         return (NULL);
     }
-    head[fd] = dealloc(&head);
+    head[fd] = dealloc(&head[fd]);
     return (line);
 }
