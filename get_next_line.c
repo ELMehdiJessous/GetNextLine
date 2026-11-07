@@ -22,7 +22,7 @@ void	ft_lstadd_back(t_list **lst, char *content)
 	p = malloc(sizeof(t_list));
 	if (!p)
     {
-        free (p);
+        free(content);
 		return ;
     }
 	p->content = content;
@@ -48,7 +48,7 @@ size_t	ft_strlen(const char *s)
 	return (i);
 }
 
-int cought_sep(t_list **head)   
+int cought_sep(t_list **head)
 {
     int     i;
     t_list  *curr;
@@ -77,13 +77,18 @@ void create_nods(int fd, t_list **lst)
 
     while ((!cought_sep(lst)))
     {
-        buf = malloc(sizeof(char) * BUFFER_SIZE + 1);
+        buf = malloc(sizeof(char) * (BUFFER_SIZE + 1));
         if (!buf)
             return;
         chars = read(fd,buf,BUFFER_SIZE);
         if (chars <= 0)
         {
             free(buf);
+            if (chars < 0)
+            {
+                free_all(lst);
+                return;
+            }
             return ;
         }
         buf[chars] = '\0';
@@ -126,25 +131,29 @@ char *copy_till(t_list *head)
         while (head->content[i] && head->content[i] != '\n')
             *(p + k++) = head->content[i++];
         if (head->content[i] == '\n')
+        {
             *(p + k++) = '\n';
+            break;
+        }
         head = head->next;
     }
     *(p + k) = '\0';
     return (p);
 }
 
-t_list *stash(t_list *head)
+t_list  *stash(t_list *head)
 {
     char    *buf;
     int     i;
     int     k;
 
     i = 0;
-    k = 0;    
+    k = 0;
     while (head->content[i] && head->content[i] != '\n')
         i++;
     if (head->content[i] == '\n')
         i++;
+    
     buf = malloc(sizeof(char) * (ft_strlen(head->content) - i + 1));
     if (!buf)
         return (NULL);
@@ -156,24 +165,26 @@ t_list *stash(t_list *head)
     return (head);
 }
 
-t_list *dealloc(t_list **head)
+t_list	*dealloc(t_list **head)
 {
-    t_list  *current;
-    t_list  *next;
-    
-    current = *head;
-    if (!current)
-        return (NULL);
-    while (current->next)
-    {
-        next = current->next;
-        free(current->content);
-        current->content = NULL;
-        current->next = NULL;
-        free(current);
-        current = next;
-    }
-    return (stash(current));
+	t_list	*next;
+	int		i;
+
+	if (!head || !*head)
+		return (NULL);
+	while (*head)
+	{
+		i = 0;
+		while ((*head)->content[i] && (*head)->content[i] != '\n')
+			i++;
+		if ((*head)->content[i] == '\n')
+			return (stash(*head));
+		next = (*head)->next;
+		free((*head)->content);
+		free(*head);
+		*head = next;
+	}
+	return (NULL);
 }
 
 void free_all(t_list **head)
@@ -196,21 +207,26 @@ char *get_next_line(int fd)
 {
     static  t_list  *head;
     char            *line;
+    t_list          *tmp;
 
     if (fd < 0 || BUFFER_SIZE == 0 || (0 > read(fd,0,0)))
         return (NULL);
     create_nods(fd, &head);
+    while (head && head->content[0] == '\0')
+    {
+        tmp = head;
+        head = head->next;
+        free(tmp->content);
+        free(tmp);
+    }
     if (!head)
         return (NULL);
     line = copy_till(head);
-    if (!line || !head->content[0])
+    if (!line)
     {
-        free(line);
         free_all(&head);
         return (NULL);
     }
     head = dealloc(&head);
-    if (head && !head->content[0])
-        free_all(&head);
     return (line);
 }
