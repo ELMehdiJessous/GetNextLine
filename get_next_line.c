@@ -6,7 +6,7 @@
 /*   By: eljessou <eljessou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/11/05 17:29:09 by eljessou          #+#    #+#             */
-/*   Updated: 2026/11/07 19:21:55 by eljessou         ###   ########.fr       */
+/*   Updated: 2026/11/09 15:32:18 by eljessou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ char	*copy_till(t_list *head)
 	int		i;
 	int		k;
 
-	p = malloc((lst_size(head) + 2) * sizeof(char));
+	p = malloc((lst_size(head) + 1) * sizeof(char));
 	if (!p)
 		return (NULL);
 	k = 0;
@@ -70,12 +70,14 @@ t_list	*stash(t_list *head)
 	char	*buf;
 	int		i;
 	int		k;
+	t_list	*next;
 
 	i = 0;
 	k = 0;
 	while (head->content[i] && head->content[i] != '\n')
 		i++;
 	i += (head->content[i] == '\n');
+	next = head->next;
 	if (head->content[i] == '\0')
 		return (free(head->content), free(head), next);
 	buf = malloc(sizeof(char) * (ft_strlen(head->content) - i + 1));
@@ -115,11 +117,11 @@ char	*get_next_line(int fd)
 {
 	static t_list	*head;
 	char			*line;
-	t_list			*tmp;
 
-	if (fd < 0 || BUFFER_SIZE == 0 || (0 > read(fd, 0, 0)))
+	if (fd < 0 || BUFFER_SIZE == 0 || BUFFER_SIZE > 2147483647
+		|| (0 > read(fd, 0, 0)))
 		return (NULL);
-	create_nods(fd, &head);
+	create_nods(fd, &head, BUFFER_SIZE);
 	if (!head)
 		return (NULL);
 	line = copy_till(head);
@@ -130,4 +132,9 @@ char	*get_next_line(int fd)
 	}
 	head = dealloc(&head);
 	return (line);
+}
+
+int main()
+{
+	int fd = open("a.txt", O_CREAT)
 }

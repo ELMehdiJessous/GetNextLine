@@ -6,13 +6,13 @@
 /*   By: eljessou <eljessou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/11/07 21:50:55 by eljessou          #+#    #+#             */
-/*   Updated: 2026/11/07 23:15:54 by eljessou         ###   ########.fr       */
+/*   Updated: 2026/11/09 14:30:15 by eljessou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line_bonus.h"
 
-int	lst_size(t_list *head)
+int	lst_size_bonus(t_list *head)
 {
 	int	size;
 	int	i;
@@ -36,13 +36,13 @@ int	lst_size(t_list *head)
 	return (size);
 }
 
-char	*copy_till(t_list *head)
+char	*copy_till_bonus(t_list *head)
 {
 	char	*p;
 	int		i;
 	int		k;
 
-	p = malloc((lst_size(head) + 2) * sizeof(char));
+	p = malloc((lst_size_bonus(head) + 1) * sizeof(char));
 	if (!p)
 		return (NULL);
 	k = 0;
@@ -65,7 +65,7 @@ char	*copy_till(t_list *head)
 	return (p);
 }
 
-t_list	*stash(t_list *head)
+t_list	*stash_bonus(t_list *head)
 {
 	char	*buf;
 	int		i;
@@ -77,8 +77,8 @@ t_list	*stash(t_list *head)
 		i++;
 	i += (head->content[i] == '\n');
 	if (head->content[i] == '\0')
-		return (free(head->content), free(head), next);
-	buf = malloc(sizeof(char) * (ft_strlen(head->content) - i + 1));
+		return (free(head->content), free(head), NULL);
+	buf = malloc(sizeof(char) * (ft_strlen_bonus(head->content) - i + 1));
 	if (!buf)
 		return (NULL);
 	while (head->content[i])
@@ -89,7 +89,7 @@ t_list	*stash(t_list *head)
 	return (head);
 }
 
-t_list	*dealloc(t_list **head)
+t_list	*dealloc_bonus(t_list **head)
 {
 	t_list	*next;
 	int		i;
@@ -102,7 +102,7 @@ t_list	*dealloc(t_list **head)
 		while ((*head)->content[i] && (*head)->content[i] != '\n')
 			i++;
 		if ((*head)->content[i] == '\n')
-			return (stash(*head));
+			return (stash_bonus(*head));
 		next = (*head)->next;
 		free((*head)->content);
 		free(*head);
@@ -111,22 +111,23 @@ t_list	*dealloc(t_list **head)
 	return (NULL);
 }
 
-char	*get_next_line_bonus(int fd)
+char	*get_next_line(int fd)
 {
 	static t_list	*head[MAX_FD];
 	char			*line;
 
-	if (fd < 0 || BUFFER_SIZE == 0 || (0 > read(fd, 0, 0)))
+	if (fd < 0 || BUFFER_SIZE <= 0 || BUFFER_SIZE > 2147483647
+		|| (0 > read(fd, 0, 0)))
 		return (NULL);
-	create_nods(fd, &head[fd]);
+	create_nods_bonus(fd, &head[fd], BUFFER_SIZE);
 	if (!head[fd])
 		return (NULL);
-	line = copy_till(head[fd]);
+	line = copy_till_bonus(head[fd]);
 	if (!line)
 	{
-		free_all(&head[fd]);
+		free_all_bonus(&head[fd]);
 		return (NULL);
 	}
-	head[fd] = dealloc(&head[fd]);
+	head[fd] = dealloc_bonus(&head[fd]);
 	return (line);
 }
