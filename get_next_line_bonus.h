@@ -6,7 +6,7 @@
 /*   By: eljessou <eljessou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/11/08 15:43:19 by eljessou          #+#    #+#             */
-/*   Updated: 2026/11/09 14:30:24 by eljessou         ###   ########.fr       */
+/*   Updated: 2026/11/10 21:41:49 by eljessou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,11 +14,10 @@
 # define GET_NEXT_LINE_BONUS_H
 
 # include <unistd.h>
-# include <stdio.h>
 # include <stdlib.h>
 
 # ifndef BUFFER_SIZE
-#  define BUFFER_SIZE 10000000
+#  define BUFFER_SIZE 5
 # endif
 
 # ifndef MAX_FD
@@ -37,8 +36,8 @@ t_list	*dealloc_bonus(t_list **head);
 t_list	*stash_bonus(t_list *head);
 char	*copy_till_bonus(t_list *head);
 int		lst_size_bonus(t_list *head);
-void	create_nods_bonus(int fd, t_list **lst, size_t size);
-int		cought_sep_bonus(char *r);
+void	create_nodes_bonus(int fd, t_list **lst);
+int		cought_sep_bonus(t_list *head);
 int		ft_lstadd_back_bonus(t_list **lst, char *content);
 void	free_all_bonus(t_list **head);
 

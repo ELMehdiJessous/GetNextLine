@@ -6,7 +6,7 @@
 /*   By: eljessou <eljessou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/11/07 21:51:46 by eljessou          #+#    #+#             */
-/*   Updated: 2026/11/09 14:41:18 by eljessou         ###   ########.fr       */
+/*   Updated: 2026/11/10 21:42:38 by eljessou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,31 +65,36 @@ size_t	ft_strlen_bonus(const char *s)
 	return (i);
 }
 
-int	cought_sep_bonus(char *r)
+int	cought_sep_bonus(t_list *head)
 {
-	if (!r)
-		return (0);
-	while (*r)
+	int	i;
+
+	while (head)
 	{
-		if (*r == '\n')
-			return (1);
-		r++;
+		i = 0;
+		while (head->content[i])
+		{
+			if (head->content[i] == '\n')
+				return (1);
+			i++;
+		}
+		head = head->next;
 	}
 	return (0);
 }
 
-void	create_nods_bonus(int fd, t_list **lst, size_t size)
+void	create_nodes_bonus(int fd, t_list **lst)
 {
 	ssize_t	chars;
 	char	*buf;
 
 	buf = NULL;
-	while (!cought_sep_bonus(buf))
+	while (!cought_sep_bonus(*lst))
 	{
-		buf = malloc(sizeof(char) * (size + 1));
+		buf = malloc(sizeof(char) * (BUFFER_SIZE + 1));
 		if (!buf)
 			return ;
-		chars = read(fd, buf, size);
+		chars = read(fd, buf, BUFFER_SIZE);
 		if (chars <= 0)
 		{
 			free(buf);

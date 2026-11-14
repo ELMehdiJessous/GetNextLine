@@ -6,7 +6,7 @@
 /*   By: eljessou <eljessou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/11/07 21:50:55 by eljessou          #+#    #+#             */
-/*   Updated: 2026/11/09 14:30:15 by eljessou         ###   ########.fr       */
+/*   Updated: 2026/11/10 21:54:27 by eljessou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,6 +86,7 @@ t_list	*stash_bonus(t_list *head)
 	*(buf + k) = '\0';
 	free(head->content);
 	head->content = buf;
+	head->next = NULL;
 	return (head);
 }
 
@@ -116,10 +117,9 @@ char	*get_next_line(int fd)
 	static t_list	*head[MAX_FD];
 	char			*line;
 
-	if (fd < 0 || BUFFER_SIZE <= 0 || BUFFER_SIZE > 2147483647
-		|| (0 > read(fd, 0, 0)))
+	if (fd < 0 || BUFFER_SIZE <= 0 || fd >= MAX_FD)
 		return (NULL);
-	create_nods_bonus(fd, &head[fd], BUFFER_SIZE);
+	create_nodes_bonus(fd, &head[fd]);
 	if (!head[fd])
 		return (NULL);
 	line = copy_till_bonus(head[fd]);
